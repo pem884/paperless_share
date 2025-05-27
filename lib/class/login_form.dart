@@ -97,9 +97,11 @@ class LoginFormState extends State<LoginForm> {
         height: 40,
         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
         padding: EdgeInsets.symmetric(horizontal: 10),
-        child: RaisedButton(
-          textColor: Colors.white,
-          color: Color(0xFF17541f),
+        child: ElevatedButton(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.green.shade900),
+          ),
           child: Text(AppLocalizations.of(context).login),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
