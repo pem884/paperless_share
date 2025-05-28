@@ -212,14 +212,14 @@ class _SharePageState extends State<SharePage> {
               return AlertDialog(
                 title: new Text(AppLocalizations.of(context).logout),
                 actions: [
-                  new FlatButton(
+                  new TextButton(
                     child: new Text(AppLocalizations.of(context).yes),
                     onPressed: () {
                       _auth.logout();
                       Navigator.pushReplacementNamed(context, "/login");
                     },
                   ),
-                  new FlatButton(
+                  new TextButton(
                       child: new Text(AppLocalizations.of(context).no),
                       onPressed: () {
                         Navigator.of(context).pop();

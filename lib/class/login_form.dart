@@ -97,13 +97,15 @@ class LoginFormState extends State<LoginForm> {
         height: 40,
         margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
         padding: EdgeInsets.symmetric(horizontal: 10),
-        child: RaisedButton(
-          textColor: Colors.white,
-          color: Color(0xFF17541f),
+        child: ElevatedButton(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.green.shade900),
+          ),
           child: Text(AppLocalizations.of(context).login),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
-              Scaffold.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(AppLocalizations.of(context).loggingIn)));
 
               _auth
@@ -117,7 +119,7 @@ class LoginFormState extends State<LoginForm> {
                       context, "/share", (_) => false);
                 } else {
                   print(loginError);
-                  Scaffold.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(AppLocalizations.of(context).loginFailed +
                           loginError)));
                 }
