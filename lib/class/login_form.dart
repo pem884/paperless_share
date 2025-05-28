@@ -105,7 +105,7 @@ class LoginFormState extends State<LoginForm> {
           child: Text(AppLocalizations.of(context).login),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
-              Scaffold.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(AppLocalizations.of(context).loggingIn)));
 
               _auth
@@ -119,7 +119,7 @@ class LoginFormState extends State<LoginForm> {
                       context, "/share", (_) => false);
                 } else {
                   print(loginError);
-                  Scaffold.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(AppLocalizations.of(context).loginFailed +
                           loginError)));
                 }
