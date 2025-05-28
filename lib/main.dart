@@ -69,7 +69,7 @@ class _PaperlessShareState extends State<PaperlessShare> {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: Consumer<AuthModel>(builder: (context, model, child) {
-            if (model?.user != null && model?.user!.isValid())
+            if (model.user != null && model.user!.isValid())
               return SharePage();
             return LoginPage();
           }),
