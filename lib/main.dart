@@ -18,7 +18,7 @@ class PaperlessShare extends StatefulWidget {
 // https://medium.com/@filipvk/creating-a-custom-color-swatch-in-flutter-554bcdcb27f3
 MaterialColor createMaterialColor(Color color) {
   List strengths = <double>[.05];
-  Map swatch = <int, Color>{};
+  Map swatch = <int?, Color>{};
   final int r = color.red, g = color.green, b = color.blue;
 
   for (int i = 1; i < 10; i++) {
@@ -33,7 +33,7 @@ MaterialColor createMaterialColor(Color color) {
       1,
     );
   });
-  return MaterialColor(color.value, swatch);
+  return MaterialColor(color.value, swatch as Map<int, Color>);
 }
 
 class _PaperlessShareState extends State<PaperlessShare> {
@@ -69,7 +69,7 @@ class _PaperlessShareState extends State<PaperlessShare> {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: Consumer<AuthModel>(builder: (context, model, child) {
-            if (model?.user != null && model?.user.isValid())
+            if (model?.user != null && model?.user!.isValid())
               return SharePage();
             return LoginPage();
           }),

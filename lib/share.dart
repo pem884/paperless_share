@@ -20,14 +20,14 @@ class SharePage extends StatefulWidget {
 }
 
 class _SharePageState extends State<SharePage> {
-  StreamSubscription _intentDataStreamSubscription;
-  StreamSubscription _fileDataStreamSubscription;
-  List<SharedMediaFile> _sharedFiles;
+  late StreamSubscription _intentDataStreamSubscription;
+  late StreamSubscription _fileDataStreamSubscription;
+  List<SharedMediaFile>? _sharedFiles;
   bool _isActivelySharing = false;
 
   void uploadDocuments() {
     if (_isActivelySharing) {
-      for (var f in _sharedFiles) {
+      for (var f in _sharedFiles!) {
         uploadFileToPaperless(f.path);
       }
     }
@@ -46,7 +46,7 @@ class _SharePageState extends State<SharePage> {
         .listen((List<SharedMediaFile> value) {
       setState(() {
         _sharedFiles = value;
-        _isActivelySharing = _sharedFiles != null && _sharedFiles.isNotEmpty;
+        _isActivelySharing = _sharedFiles != null && _sharedFiles!.isNotEmpty;
       });
       uploadDocuments();
     }, onError: (err) {
@@ -57,7 +57,7 @@ class _SharePageState extends State<SharePage> {
     ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> value) {
       setState(() {
         _sharedFiles = value;
-        _isActivelySharing = _sharedFiles != null && _sharedFiles.isNotEmpty;
+        _isActivelySharing = _sharedFiles != null && _sharedFiles!.isNotEmpty;
       });
       uploadDocuments();
     });
@@ -71,7 +71,7 @@ class _SharePageState extends State<SharePage> {
   Future<Null> handleInitialFile() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      String initialFile = await getInitialFile();
+      String? initialFile = await getInitialFile();
       if (initialFile != null) {
         uploadFileToPaperless(Uri.parse(initialFile).toFilePath());
       }
@@ -81,7 +81,7 @@ class _SharePageState extends State<SharePage> {
   }
 
   Future<Null> initializeFileStreamHandling() async {
-    _fileDataStreamSubscription = getFilesStream().listen((String file) {
+    _fileDataStreamSubscription = getFilesStream()!.listen((String file) {
       if (file != null) {
         uploadFileToPaperless(Uri.parse(file).toFilePath());
       }
@@ -90,13 +90,13 @@ class _SharePageState extends State<SharePage> {
     });
   }
 
-  Future<Map<int, String>> getAvailableTagsList() async {
+  Future<Map<int?, String?>> getAvailableTagsList() async {
     final _auth = Provider.of<AuthModel>(context, listen: false);
-    var response = await Dio().get(_auth.user.formatRoute('api/tags/'),
+    var response = await Dio().get(_auth.user!.formatRoute('api/tags/'),
         options: Options(headers: <String, String>{
-          'authorization': _auth.user.formatBasicAuth()
+          'authorization': _auth.user!.formatBasicAuth()
         }));
-    Map<int, String> tags = Map<int, String>();
+    Map<int?, String?> tags = Map<int?, String?>();
     for (var availableTag in response.data["results"]) {
       tags[availableTag["id"]] = availableTag["name"];
     }
@@ -106,10 +106,10 @@ class _SharePageState extends State<SharePage> {
 
   void uploadFileToPaperless(String path) async {
     final _auth = Provider.of<AuthModel>(context, listen: false);
-    print("Uploading " + path + " to " + _auth.user.server);
+    print("Uploading " + path + " to " + _auth.user!.server!);
 
     // Check that tags still exist
-    List<int> postTags = List<int>.empty(growable: true);
+    List<int?> postTags = List<int?>.empty(growable: true);
     try {
       EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
       final tags = await prefs.getString("use_document_tags");
@@ -132,23 +132,23 @@ class _SharePageState extends State<SharePage> {
       "document": await MultipartFile.fromFile(path),
     });
 
-    Response response;
+    Response? response;
     try {
       response = await Dio().post(
-          _auth.user.formatRoute('api/documents/post_document/'),
+          _auth.user!.formatRoute('api/documents/post_document/'),
           data: formData,
           options: Options(headers: <String, String>{
-            'authorization': _auth.user.formatBasicAuth()
+            'authorization': _auth.user!.formatBasicAuth()
           }));
     } on DioError catch (e) {
       response = e.response;
       print(e);
-      print(response.data.toString());
+      print(response!.data.toString());
     }
 
     Fluttertoast.showToast(
       msg: response.statusCode == 200
-          ? AppLocalizations.of(context).fileUploaded
+          ? AppLocalizations.of(context)!.fileUploaded
           : response.data.toString(),
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
@@ -210,17 +210,17 @@ class _SharePageState extends State<SharePage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: new Text(AppLocalizations.of(context).logout),
+                title: new Text(AppLocalizations.of(context)!.logout),
                 actions: [
                   new TextButton(
-                    child: new Text(AppLocalizations.of(context).yes),
+                    child: new Text(AppLocalizations.of(context)!.yes),
                     onPressed: () {
                       _auth.logout();
                       Navigator.pushReplacementNamed(context, "/login");
                     },
                   ),
                   new TextButton(
-                      child: new Text(AppLocalizations.of(context).no),
+                      child: new Text(AppLocalizations.of(context)!.no),
                       onPressed: () {
                         Navigator.of(context).pop();
                       }),
@@ -254,9 +254,9 @@ class _SharePageState extends State<SharePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _paddedText(AppLocalizations.of(context).readyToUpload),
-            _paddedText(AppLocalizations.of(context).shareInstructions),
-            _paddedText(AppLocalizations.of(context).serverInstructions),
+            _paddedText(AppLocalizations.of(context)!.readyToUpload),
+            _paddedText(AppLocalizations.of(context)!.shareInstructions),
+            _paddedText(AppLocalizations.of(context)!.serverInstructions),
           ],
         ));
   }
@@ -279,9 +279,9 @@ class _SharePageState extends State<SharePage> {
 }
 
 class TagAlertDialog extends StatefulWidget {
-  final Function getAvailableTagsList;
+  final Function? getAvailableTagsList;
 
-  const TagAlertDialog({Key key, this.getAvailableTagsList}) : super(key: key);
+  const TagAlertDialog({Key? key, this.getAvailableTagsList}) : super(key: key);
 
   @override
   _TagAlertDialogState createState() => _TagAlertDialogState();
@@ -294,7 +294,7 @@ class _TagAlertDialogState extends State<TagAlertDialog> {
   @override
   void initState() {
     super.initState();
-    widget.getAvailableTagsList().then((availableTags) => {
+    widget.getAvailableTagsList!().then((availableTags) => {
           setState(() {
             _availableTags = availableTags;
           })
@@ -317,7 +317,7 @@ class _TagAlertDialogState extends State<TagAlertDialog> {
   Widget build(BuildContext context) {
     List<Widget> checkboxes = List<Widget>.empty(growable: true);
     for (var tagID in _availableTags.keys) {
-      final tagName = _availableTags[tagID];
+      final tagName = _availableTags[tagID]!;
       checkboxes.add(CheckboxListTile(
           secondary: Icon(Icons.local_offer_outlined),
           dense: true,
@@ -327,7 +327,7 @@ class _TagAlertDialogState extends State<TagAlertDialog> {
           value: this.selectedTags.contains(tagID),
           onChanged: (isSelected) {
             var newTags = new Set<int>.from(selectedTags);
-            if (isSelected)
+            if (isSelected!)
               newTags.add(tagID);
             else
               newTags.remove(tagID);
@@ -341,7 +341,7 @@ class _TagAlertDialogState extends State<TagAlertDialog> {
       scrollable: true,
       title: new Text("Paperless Tag"),
       content: Column(mainAxisSize: MainAxisSize.min, children: [
-        Text(AppLocalizations.of(context).tagIntro),
+        Text(AppLocalizations.of(context)!.tagIntro),
         Container(
             padding: EdgeInsets.symmetric(vertical: 15),
             child: Column(children: checkboxes))
@@ -349,7 +349,7 @@ class _TagAlertDialogState extends State<TagAlertDialog> {
       actionsPadding: EdgeInsets.symmetric(horizontal: 10),
       actions: [
         new TextButton(
-          child: new Text(AppLocalizations.of(context).tagConfirm),
+          child: new Text(AppLocalizations.of(context)!.tagConfirm),
           onPressed: () async {
             EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
             var ret = await prefs.setString(

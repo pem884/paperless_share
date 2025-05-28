@@ -36,8 +36,8 @@ class LoginFormState extends State<LoginForm> {
             child: new TextFormField(
               controller: serverController,
               validator: (value) {
-                if (value.isEmpty) {
-                  return AppLocalizations.of(context).fieldRequired;
+                if (value!.isEmpty) {
+                  return AppLocalizations.of(context)!.fieldRequired;
                 }
                 return null;
               },
@@ -45,7 +45,7 @@ class LoginFormState extends State<LoginForm> {
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   hintText: "http://192.168.1.50:8000",
-                  labelText: AppLocalizations.of(context).server),
+                  labelText: AppLocalizations.of(context)!.server),
             ),
           ),
           new AutofillGroup(
@@ -55,13 +55,13 @@ class LoginFormState extends State<LoginForm> {
                 autofillHints: [AutofillHints.username],
                 controller: usernameController,
                 validator: (value) {
-                  if (value.isEmpty) {
-                    return AppLocalizations.of(context).fieldRequired;
+                  if (value!.isEmpty) {
+                    return AppLocalizations.of(context)!.fieldRequired;
                   }
                   return null;
                 },
                 decoration: new InputDecoration(
-                  labelText: AppLocalizations.of(context).username,
+                  labelText: AppLocalizations.of(context)!.username,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
@@ -72,13 +72,13 @@ class LoginFormState extends State<LoginForm> {
                 autofillHints: [AutofillHints.password],
                 controller: passwordController,
                 validator: (value) {
-                  if (value.isEmpty) {
-                    return AppLocalizations.of(context).fieldRequired;
+                  if (value!.isEmpty) {
+                    return AppLocalizations.of(context)!.fieldRequired;
                   }
                   return null;
                 },
                 decoration: new InputDecoration(
-                  labelText: AppLocalizations.of(context).password,
+                  labelText: AppLocalizations.of(context)!.password,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
@@ -102,11 +102,11 @@ class LoginFormState extends State<LoginForm> {
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             backgroundColor: MaterialStateProperty.all<Color>(Colors.green.shade900),
           ),
-          child: Text(AppLocalizations.of(context).login),
+          child: Text(AppLocalizations.of(context)!.login),
           onPressed: () async {
-            if (_formKey.currentState.validate()) {
+            if (_formKey.currentState!.validate()) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(AppLocalizations.of(context).loggingIn)));
+                  content: Text(AppLocalizations.of(context)!.loggingIn)));
 
               _auth
                   .login(
@@ -120,8 +120,8 @@ class LoginFormState extends State<LoginForm> {
                 } else {
                   print(loginError);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(AppLocalizations.of(context).loginFailed +
-                          loginError)));
+                      content: Text(AppLocalizations.of(context)!.loginFailed +
+                          loginError!)));
                 }
               });
             }

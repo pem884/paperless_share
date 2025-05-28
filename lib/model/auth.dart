@@ -9,8 +9,8 @@ class User {
     this.token,
   });
 
-  final String server;
-  final String token;
+  final String? server;
+  final String? token;
 
   @override
   String toString() {
@@ -18,32 +18,32 @@ class User {
   }
 
   bool isValid() {
-    return (this.server.isNotEmpty && this.token.isNotEmpty);
+    return (this.server!.isNotEmpty && this.token!.isNotEmpty);
   }
 
   String formatRoute(String route) {
     var url = this.server;
-    if (this.server[this.server.length - 1] != '/') {
-      url = url + '/';
+    if (this.server![this.server!.length - 1] != '/') {
+      url = url! + '/';
     }
     // Append route
-    return url + route;
+    return url! + route;
   }
 
   String formatBasicAuth() {
-    String basicAuth = 'Token ' + this.token;
+    String basicAuth = 'Token ' + this.token!;
     return basicAuth;
   }
 }
 
 class AuthModel extends ChangeNotifier {
   String errorMessage = "";
-  User _user;
+  User? _user;
 
   void loadSettings() async {
     var _prefs = EncryptedSharedPreferences();
 
-    User _savedUser;
+    User? _savedUser;
     try {
       _savedUser = User(
           server: await _prefs.getString("saved_server"),
@@ -56,12 +56,12 @@ class AuthModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  User get user => _user;
+  User? get user => _user;
 
-  Future<String> login({
-    @required String server,
-    @required String username,
-    @required String password,
+  Future<String?> login({
+    required String server,
+    required String username,
+    required String password,
   }) async {
     String _server = server;
     String _username = username;
