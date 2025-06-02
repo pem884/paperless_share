@@ -29,6 +29,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace = "com.quinncasey.paperless_share"
+
     compileSdkVersion 35
 
     sourceSets {
