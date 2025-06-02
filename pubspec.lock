@@ -171,10 +171,10 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "6a578929183be8fa2191e13fc56639f85f6f1c4f"
-      url: "https://github.com/NiFNi/flutter_handle_file"
+      resolved-ref: ee7efa564901f23920ad6faa1e550866985e4ca7
+      url: "https://github.com/MrPat/flutter_handle_file"
     source: git
-    version: "0.2.0"
+    version: "0.3.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
